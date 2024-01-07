@@ -5,9 +5,9 @@ import TextField from '@/components/TextField';
 import render from '@/utils/test/render';
 
 // 모든 테스트가 실행 전
-beforeEach(async () => {
-  await render(<TextField className="my-class" />);
-});
+// beforeEach(async () => {
+//   await render(<TextField className="my-class" />);
+// });
 
 it('className prop 으로 설정한 css class가 적용된다.', async () => {
   // AAA 패턴
@@ -27,7 +27,7 @@ it('className prop 으로 설정한 css class가 적용된다.', async () => {
   // Arrange 단계 끝! - > await render(<TextField className="my-class"/>)
 
   // query : 사용자가 탐색할 수 있음.
-  // await render(<TextField className="my-class" />);
+  await render(<TextField className="my-class" />);
 
   screen.debug(); // DOM구조를 확인할 수 있음.
 
@@ -127,4 +127,80 @@ describe('placeholder', () => {
 
     expect(textInput).toBeInTheDocument(); // dom에 존재하는지
   });
+});
+
+it('텍스트를 입력할 때 마다 onChange 가 호출된다.', async function () {
+  // userEvent
+  // 다양한 이벤트를 실제 브라우저와 유사하게 구현
+
+  const spy = vi.fn(); // 스파이함수
+
+  const { user } = await render(<TextField onChange={spy} />);
+  const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.'); // placeholder기준으로 찾을 수 있음.
+
+  await user.type(textInput, 'test'); //typing을 사용할 수 있다. keydown이벤트를 실행시킴.
+
+  expect(spy).toHaveBeenCalledWith('test');
+  // 우선순위
+  // 실제 사용자의 상호작용 방식과 가장 유사한 쿼리가 더 우선순위가 높다.
+  // role, lable, placeholder, text 권장
+  // testId: DOM구조가 바뀌면 텍스트 자체도 깨질 수 있기 때문에 다른 쿼리를 쓰자.
+});
+
+it('Enter키를 입력하면, onEnter가 실행됨.', async function () {
+  // userEvent
+  // 다양한 이벤트를 실제 브라우저와 유사하게 구현
+
+  const spy = vi.fn(); // 스파이함수
+
+  const { user } = await render(<TextField onEnter={spy} />);
+  const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.'); // placeholder기준으로 찾을 수 있음.
+
+  await user.type(textInput, 'test{Enter}'); //typing을 사용할 수 있다. keydown이벤트를 실행시킴.
+
+  expect(spy).toHaveBeenCalledWith('test');
+  // 우선순위
+  // 실제 사용자의 상호작용 방식과 가장 유사한 쿼리가 더 우선순위가 높다.
+  // role, lable, placeholder, text 권장
+  // testId: DOM구조가 바뀌면 텍스트 자체도 깨질 수 있기 때문에 다른 쿼리를 쓰자.
+});
+
+it('focus시 onFocus 호출되는지', async function () {
+  // userEvent
+  // 다양한 이벤트를 실제 브라우저와 유사하게 구현
+
+  const spy = vi.fn(); // 스파이함수
+
+  const { user } = await render(<TextField onFocus={spy} />);
+  const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.'); // placeholder기준으로 찾을 수 있음.
+
+  await user.click(textInput);
+
+  expect(spy).toHaveBeenCalled();
+
+  // 우선순위
+  // 실제 사용자의 상호작용 방식과 가장 유사한 쿼리가 더 우선순위가 높다.
+  // role, lable, placeholder, text 권장
+  // testId: DOM구조가 바뀌면 텍스트 자체도 깨질 수 있기 때문에 다른 쿼리를 쓰자.
+});
+
+it('focus시 border 스타일 변경', async function () {
+  // userEvent
+  // 다양한 이벤트를 실제 브라우저와 유사하게 구현
+
+  const spy = vi.fn(); // 스파이함수
+
+  const { user } = await render(<TextField onFocus={spy} />);
+  const textInput = screen.getByPlaceholderText('텍스트를 입력해 주세요.'); // placeholder기준으로 찾을 수 있음.
+
+  await user.click(textInput);
+
+  expect(textInput).toHaveStyle(
+    "borderWidth: 2, borderColor: 'rgb(25, 118, 210)'",
+  );
+
+  // 우선순위
+  // 실제 사용자의 상호작용 방식과 가장 유사한 쿼리가 더 우선순위가 높다.
+  // role, lable, placeholder, text 권장
+  // testId: DOM구조가 바뀌면 텍스트 자체도 깨질 수 있기 때문에 다른 쿼리를 쓰자.
 });
