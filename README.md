@@ -7,6 +7,7 @@
 
 ### 학습기록
 > - `240107`  
+>   - 단위 테스트 / setup | teardown / react testing library
 
 ### 사용 기술 스택
 
