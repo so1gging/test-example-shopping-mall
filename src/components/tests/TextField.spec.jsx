@@ -4,7 +4,11 @@ import React from 'react';
 import TextField from '@/components/TextField';
 import render from '@/utils/test/render';
 
-// 1. description 을 잘 작성해야 한다.
+// 모든 테스트가 실행 전
+beforeEach(async () => {
+  await render(<TextField className="my-class" />);
+});
+
 it('className prop 으로 설정한 css class가 적용된다.', async () => {
   // AAA 패턴
 
@@ -23,7 +27,7 @@ it('className prop 으로 설정한 css class가 적용된다.', async () => {
   // Arrange 단계 끝! - > await render(<TextField className="my-class"/>)
 
   // query : 사용자가 탐색할 수 있음.
-  await render(<TextField className="my-class" />);
+  // await render(<TextField className="my-class" />);
 
   screen.debug(); // DOM구조를 확인할 수 있음.
 
@@ -68,6 +72,9 @@ it('placeholder prop에 따라 placeholder가 변경된다.', async function () 
  */
 
 describe('placeholder', () => {
+  beforeEach(() => {
+    console.log('describe - before Each');
+  });
   it('className prop 으로 설정한 css class가 적용된다.', async () => {
     // AAA 패턴
 
@@ -87,8 +94,6 @@ describe('placeholder', () => {
 
     // query : 사용자가 탐색할 수 있음.
     await render(<TextField className="my-class" />);
-
-    screen.debug(); // DOM구조를 확인할 수 있음.
 
     // className이란 내부 prop이나 state를 검증하지 않고
     // 렌더링 되는 DOM구조가 올바르게 변경되었는지 확인(O) -> 최종적으로 사용자가 보는 결과는 DOM
