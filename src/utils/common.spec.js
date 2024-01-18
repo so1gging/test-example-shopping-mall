@@ -35,3 +35,36 @@ describe('pick util 단위테스트', () => {
     expect(pick(obj)).toEqual({});
   });
 });
+
+it('특정 시간이 지난 후 함수가 호출된다.', function () {
+  vi.useFakeTimers();
+  const spy = vi.fn();
+
+  const debounceFn = debounce(spy, 300);
+
+  debounceFn();
+
+  vi.advanceTimersByTime(300);
+  expect(spy).toHaveBeenCalledWith();
+  vi.useRealTimers();
+});
+
+it('연이어 호출해도 호출 기준으로 지정된 타이머 시간이 지난 경우에만 함수가 호출된다.', function () {
+  vi.useFakeTimers();
+  const spy = vi.fn();
+  const debounceFn = debounce(spy, 300);
+
+  debounceFn();
+
+  vi.advanceTimersByTime(200);
+  debounceFn();
+
+  vi.advanceTimersByTime(100);
+  debounceFn();
+
+  vi.advanceTimersByTime(300);
+  debounceFn();
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  vi.useRealTimers();
+});
